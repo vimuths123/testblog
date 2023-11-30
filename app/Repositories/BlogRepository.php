@@ -9,7 +9,9 @@ class BlogRepository implements BlogRepositoryInterface
 {
     public function all()
     {
-        return Blog::latest()->get();
+        return Blog::latest()
+            ->whereNotNull('published_date')
+            ->get();
     }
 
     public function find($id)
@@ -21,6 +23,7 @@ class BlogRepository implements BlogRepositoryInterface
     {
         return Blog::where('id', '!=', $currentBlog->id)
             ->latest()
+            ->whereNotNull('published_date')
             ->take($count)
             ->get();
     }
