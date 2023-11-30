@@ -6,6 +6,7 @@ use App\Models\Blog;
 use Illuminate\Http\Request;
 use App\Repositories\BlogRepositoryInterface;
 use App\Http\Requests\BlogPostCreateRequest;
+use App\Http\Requests\BlogEditRequest;
 
 
 class BlogController extends Controller
@@ -30,10 +31,11 @@ class BlogController extends Controller
         return view('blogs.single', compact('blog', 'latestBlogs'));
     }
 
-    public function create(){
+    public function create()
+    {
         return view('blogs.create');
     }
-    
+
     public function store(BlogPostCreateRequest $request)
     {
         $data = $request->validated();
@@ -41,7 +43,36 @@ class BlogController extends Controller
         $data = $request->only(['title', 'content']);
         $blog = $this->blogRepository->create($data);
 
-        return redirect()->route('blogs.create', $blog->id)->with('success', 'Blog post created successfully.');
+        return redirect()->route('user.blogs', $blog->id)->with('success', 'Blog post created successfully.');
+    }
+
+    public function showUserBlogs()
+    {
+        $userBlogs = $this->blogRepository->getUserBlogs(auth()->id());
+
+        return view('blogs.user_blogs', compact('userBlogs'));
+    }
+
+    public function edit($id)
+    {
+        $blog = $this->blogRepository->find($id);
+
+        return view('blogs.edit', compact('blog'));
+    }
+
+    public function update(BlogEditRequest $request, $id)
+    {
+        $data = $request->validated();
+
+        $blog = $this->blogRepository->update($id, $data);
+
+        return redirect()->route('user.blogs')->with('success', 'Blog post updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $this->blogRepository->delete($id);
+
+        return redirect()->route('user.blogs')->with('success', 'Blog post deleted successfully.');
     }
 }
-

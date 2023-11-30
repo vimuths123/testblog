@@ -29,4 +29,23 @@ class BlogRepository implements BlogRepositoryInterface
     {
         return Blog::create(array_merge($data, ['user_id' => auth()->id()]));
     }
+
+    public function getUserBlogs($userId)
+    {
+        return Blog::where('user_id', $userId)->get();
+    }
+
+    public function update($id, array $data)
+    {
+        $blog = Blog::findOrFail($id);
+        $blog->update($data);
+
+        return $blog;
+    }
+
+    public function delete($id)
+    {
+        $blog = Blog::findOrFail($id);
+        $blog->delete();
+    }
 }
