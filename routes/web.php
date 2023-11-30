@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/blogs/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
     Route::put('/blogs/{blog}', [BlogController::class, 'update'])->name('blogs.update');
     Route::delete('/blogs/{blog}', [BlogController::class, 'destroy'])->name('blogs.destroy');
+    Route::post('blogs/{id}/publish', [BlogController::class, 'publish'])->name('blogs.publish');
+    Route::post('blogs/{id}/unpublish', [BlogController::class, 'unpublish'])->name('blogs.unpublish');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

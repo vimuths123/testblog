@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Repositories\BlogRepositoryInterface;
 use App\Http\Requests\BlogPostCreateRequest;
 use App\Http\Requests\BlogEditRequest;
-
+use Carbon\Carbon;
 
 class BlogController extends Controller
 {
@@ -74,5 +74,21 @@ class BlogController extends Controller
         $this->blogRepository->delete($id);
 
         return redirect()->route('user.blogs')->with('success', 'Blog post deleted successfully.');
+    }
+
+    public function publish($id)
+    {
+        $blog = Blog::findOrFail($id);
+        $blog->update(['published_date' => Carbon::now()]);
+
+        return redirect()->back()->with('success', 'Blog published successfully.');
+    }
+
+    public function unpublish($id)
+    {
+        $blog = Blog::findOrFail($id);
+        $blog->update(['published_date' => null]);
+
+        return redirect()->back()->with('success', 'Blog unpublished successfully.');
     }
 }

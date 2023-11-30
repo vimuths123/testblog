@@ -39,6 +39,19 @@
                                 <td class="py-2 px-4 border border-gray-300">{{ strlen($blog->content) > 80 ? substr($blog->content, 0, 80) . '...' : $blog->content }}</td>
                                 <td class="py-2 px-4 border border-gray-300">
                                     <a href="{{ route('blogs.edit', $blog->id) }}" class="text-blue-500 hover:underline mr-2">Edit</a>
+
+                                    @if ($blog->published_date)
+                                    <form id="unpublishForm_{{ $blog->id }}" action="{{ route('blogs.unpublish', $blog->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="button" onclick="confirmAction('{{ $blog->id }}', 'unpublish')" class="text-red-500 hover:underline">Unpublish</button>
+                                    </form>
+                                    @else
+                                    <form id="publishForm_{{ $blog->id }}" action="{{ route('blogs.publish', $blog->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="button" onclick="confirmAction('{{ $blog->id }}', 'publish')" class="text-green-500 hover:underline">Publish</button>
+                                    </form>
+                                    @endif
+
                                     <form id="deleteForm_{{ $blog->id }}" action="{{ route('blogs.destroy', $blog->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
@@ -49,6 +62,15 @@
                                         function confirmDelete(blogId) {
                                             if (confirm("Are you sure you want to delete this blog?")) {
                                                 document.getElementById('deleteForm_' + blogId).submit();
+                                            }
+                                        }
+                                    </script>
+
+                                    <script>
+                                        function confirmAction(blogId, action) {
+                                            var actionText = action === 'publish' ? 'publish this blog' : 'unpublish this blog';
+                                            if (confirm("Are you sure you want to " + actionText + "?")) {
+                                                document.getElementById(action + 'Form_' + blogId).submit();
                                             }
                                         }
                                     </script>
