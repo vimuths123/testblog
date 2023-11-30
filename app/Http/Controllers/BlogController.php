@@ -8,6 +8,7 @@ use App\Repositories\BlogRepositoryInterface;
 use App\Http\Requests\BlogPostCreateRequest;
 use App\Http\Requests\BlogEditRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 
 class BlogController extends Controller
 {
@@ -57,6 +58,8 @@ class BlogController extends Controller
     {
         $blog = $this->blogRepository->find($id);
 
+        $this->authorize('update', $blog);
+
         return view('blogs.edit', compact('blog'));
     }
 
@@ -65,6 +68,7 @@ class BlogController extends Controller
         $data = $request->validated();
 
         $blog = $this->blogRepository->update($id, $data);
+        $this->authorize('update', $blog);
 
         return redirect()->route('user.blogs')->with('success', 'Blog post updated successfully.');
     }
@@ -73,12 +77,17 @@ class BlogController extends Controller
     {
         $this->blogRepository->delete($id);
 
+        $blog = $this->blogRepository->find($id);
+
+        $this->authorize('delete', $blog);
+
         return redirect()->route('user.blogs')->with('success', 'Blog post deleted successfully.');
     }
 
     public function publish($id)
     {
         $blog = Blog::findOrFail($id);
+        $this->authorize('update', $blog);
         $blog->update(['published_date' => Carbon::now()]);
 
         return redirect()->back()->with('success', 'Blog published successfully.');
@@ -87,6 +96,7 @@ class BlogController extends Controller
     public function unpublish($id)
     {
         $blog = Blog::findOrFail($id);
+        $this->authorize('update', $blog);
         $blog->update(['published_date' => null]);
 
         return redirect()->back()->with('success', 'Blog unpublished successfully.');
