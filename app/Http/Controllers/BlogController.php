@@ -21,7 +21,7 @@ class BlogController extends Controller
 
     public function index()
     {
-        $perPage = 5;
+        $perPage = 10;
         $blogs = $this->blogRepository->all($perPage);
 
         return view('blogs.list', compact('blogs'));
@@ -73,10 +73,10 @@ class BlogController extends Controller
 
     public function destroy($id)
     {
-        $this->blogRepository->delete($id);
         $blog = $this->blogRepository->find($id);
         $this->authorize('delete', $blog);
-
+        $this->blogRepository->delete($id);
+       
         return redirect()->route('user.blogs')->with('success', 'Blog post deleted successfully.');
     }
 

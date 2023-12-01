@@ -61,5 +61,7 @@ class BlogRepository implements BlogRepositoryInterface
     {
         $blog = Blog::findOrFail($id);
         $blog->delete();
+
+        return;
     }
 }
