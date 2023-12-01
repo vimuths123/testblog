@@ -35,6 +35,11 @@
                     </div>
                 </article>
                 @endforeach
+
+                <div></div>
+
+                {{ $blogs->links() }}
+
                 @else
                 <p>No blog posts are available.</p>
                 @endif

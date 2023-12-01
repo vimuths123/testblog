@@ -21,7 +21,9 @@ class BlogController extends Controller
 
     public function index()
     {
-        $blogs = $this->blogRepository->all();
+        $perPage = 5;
+        $blogs = $this->blogRepository->all($perPage);
+
         return view('blogs.list', compact('blogs'));
     }
 

@@ -4,14 +4,25 @@ namespace App\Repositories;
 
 use App\Models\Blog;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BlogRepository implements BlogRepositoryInterface
 {
-    public function all()
+    public function all(int $perPage = 10)
     {
-        return Blog::latest()
+        // Fetch blogs with published_date not null
+        $blogs = Blog::latest()
             ->whereNotNull('published_date')
-            ->get();
+            ->paginate($perPage);
+
+        // Transform the result to a LengthAwarePaginator instance
+        return new LengthAwarePaginator(
+            $blogs->items(),
+            $blogs->total(),
+            $blogs->perPage(),
+            $blogs->currentPage(),
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
     }
 
     public function find($id)
