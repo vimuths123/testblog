@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [BlogController::class, 'index'])->name('blogs.list');
 
 Route::get('/test', function () {
     return view('blogs/create');

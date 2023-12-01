@@ -40,7 +40,6 @@ class BlogController extends Controller
     public function store(BlogPostCreateRequest $request)
     {
         $data = $request->validated();
-
         $data = $request->only(['title', 'content']);
         $blog = $this->blogRepository->create($data);
 
@@ -57,7 +56,6 @@ class BlogController extends Controller
     public function edit($id)
     {
         $blog = $this->blogRepository->find($id);
-
         $this->authorize('update', $blog);
 
         return view('blogs.edit', compact('blog'));
@@ -66,19 +64,15 @@ class BlogController extends Controller
     public function update(BlogEditRequest $request, $id)
     {
         $data = $request->validated();
-
         $blog = $this->blogRepository->update($id, $data);
         $this->authorize('update', $blog);
-
         return redirect()->route('user.blogs')->with('success', 'Blog post updated successfully.');
     }
 
     public function destroy($id)
     {
         $this->blogRepository->delete($id);
-
         $blog = $this->blogRepository->find($id);
-
         $this->authorize('delete', $blog);
 
         return redirect()->route('user.blogs')->with('success', 'Blog post deleted successfully.');
